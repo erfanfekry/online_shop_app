@@ -1,0 +1,12 @@
+<form method="get" action="{% url 'shop:search' %}">
+<input type="text" name="query" placeholder="Search...">
+<input type="submit" value="Search">
+</form>
+
+{% if errors %}
+    {% for error in errors %}
+        <ul>
+            <li>{{ error }}</li>
+        </ul>
+    {% endfor %}
+{% endif %}

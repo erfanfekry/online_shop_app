@@ -1,0 +1,85 @@
+{% extends 'parent/base.html' %}
+{% load static %}
+{% load my_tags %}
+{% block title %}product detail{% endblock %}
+{% block content %}
+    <div class="header">
+        <h1>جزییات محصول</h1>
+    </div>
+    <div class="product-container">
+        <div class="product-details">
+            <h2>{{ product.name }}</h2>
+            <p>دسته بندی: {{ product.category }}</p>
+            <p>موجودی: {{ product.inventory }}</p>
+            <ul>
+                {% for f in product.features.all %}
+                    <li>{{ f.name }}: {{ f.value }}</li>
+                {% endfor %}
+            </ul>
+            <div class="price">
+                <span class="original-price">قیمت: {{ product.price|intcomma }}</span>
+                <br>
+                <span class="discounted-price-d">قیمت پس از تخفیف: {{ product.new_price|intcomma}}</span>
+            </div>
+            <br>
+            <button id="add-to-cart">
+                افزودن به سبد خرید
+
+            </button>
+
+{#            <button id="clear-cart">#}
+{#                حذف سبد خرید#}
+{#            </button>#}
+
+
+        </div>
+        <div class="product-images">
+            {% for img in product.images.all %}
+                <img src="{{ img.image_file.url }}">
+            {% endfor %}
+        </div>
+    </div>
+    <div class="product-description">
+        <h3>توضیحات محصول</h3>
+        <p>{{ product.description }}</p>
+    </div>
+    <hr>
+    <div class="related_products">
+        <h3>محصولات مرتبط.
+        </h3>
+        {% for r_product in related_products %}
+                <div class="product">
+                    <h3>
+                        <a href="{{ r_product.get_absolute_url }}">
+                            {{ r_product.name }}
+                            <img class="pic" src="{{ r_product.images.first.image_file.url }}">
+                        </a>
+                    </h3>
+                    <div class="price">
+                        <span class="original-price"><span> تومان</span>{{ r_product.price|intcomma }}</span>
+                        <br>
+                        <span class="discounted-price"><span> تومان </span>{{ r_product.new_price|intcomma }}</span>
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function(){
+        $('#add-to-cart').click(function(){
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'cart:add-to-cart' product.id %}',
+                data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                dataType: 'json',
+                success: function(data) {
+                    $('#item_count').text(data.item_count)
+                    $('#total_price').text(data.total_price)
+                },
+            });
+        });
+    });
+</script>
+
+{% endblock %}

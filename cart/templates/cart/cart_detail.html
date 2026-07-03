@@ -1,0 +1,106 @@
+{% extends 'parent/base.html' %}
+{% block title %}Cart Detail{% endblock %}
+{% block content %}
+{% load my_tags %}
+    <div class="cart-header">
+        <h1>سبد خرید</h1>
+    </div>
+    <div class="cart-detail-container">
+
+        {% for item in cart %}
+        <div class="product-item" data-item-id="{{ item.product.id }}">
+            <a href="{% url 'shop:product-detail' item.product.id item.product.slug %}">
+                <img src="{{ item.product.images.first.image_file.url }}" class="product-image">
+            </a>
+
+            <div class="product-info">
+                <h3>
+                    <a href="{% url 'shop:product-detail' item.product.id item.product.slug %}">
+                        نام محصول: {{ item.product.name }}
+
+                    </a>
+                </h3>
+                <p>تعداد: <span id="item-quantity-{{ item.product.id }}">{{ item.quantity }}</span></p>
+                <p>قیمت واحد: <span>{{ item.price|intcomma}}</span></p>
+                <p>قیمت کل: <span id="item-total-{{ item.product.id }}">{{ item.total|intcomma}}</span></p>
+            </div>
+            <div class="actions">
+                <div class="quantity-add">+</div>
+                <div class="quantity-decrease">-</div>
+                <div class="item-remove">🗑</div>
+            </div>
+
+        </div>
+        {% endfor %}
+        <div class="total-price">
+            <p>قیمت کل: <span id="item-total_price">{{ cart.get_total_price|intcomma }}</span> تومان</p>
+            <p>هزینه ارسال: <span>{{ cart.get_post_price|intcomma }}</span>  </p>
+            <p>مبلغ قابل پرداخت: <span id="item-final_price">{{ cart.get_final_price|intcomma }}</span> تومان</p>
+        </div>
+        <div class="checkout-buttons">
+            <div class="continue-button"><a href="{% url 'account:phone-verification' %}">ادامه خرید</a></div>
+            <div class="back-button"><a href="{% url 'shop:product-list' %}">بازگشت به لیست محصولات</a></div>
+
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(document).ready(function(){
+
+            $('.quantity-add').on('click', function (){
+                updateQuantity($(this).closest('.product-item').data('item-id'),'add');
+            });
+
+            $('.quantity-decrease').on('click', function (){
+                updateQuantity($(this).closest('.product-item').data('item-id'),'decrease');
+            });
+
+            function updateQuantity(itemID, action){
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'cart:update-quantity' %}',
+                    data: {
+                        'item-id': itemID,
+                        'action': action,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response){
+                        if (response.success){
+                            $('#item_count').text(response.item_count);
+                            $('#total_price').text(response.total_price);
+                            $('#item-quantity-' + itemID).text(response.quantity);
+                            $('#item-total-' + itemID).text(response.total);
+                            $('#item-total_price').text(response.total_price);
+                            $('#item-final_price').text(response.final_price);
+
+
+
+                        } else {
+                            alert('Error updating quantity');
+                       }
+                    }
+                });
+            }
+            $('.item-remove').on('click', function(){
+                var itemID = $(this).closest('.product-item').data('item-id');
+                $.ajax({
+                type: 'POST',
+                url: '{% url 'cart:remove-from-cart' %}',
+                data: {'item-id': itemID, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(response){
+                        if (response.success){
+                            $('#item_count').text(response.item_count);
+                            $('#total_price').text(response.total_price);
+                            $('#item-total_price').text(response.total_price);
+                            $('#item-final_price').text(response.final_price);
+                            $(`.product-item[data-item-id=${itemID}]`).remove();
+
+                        } else {
+                            alert('Error removing item');
+                       }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

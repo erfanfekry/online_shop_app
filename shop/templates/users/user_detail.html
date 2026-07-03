@@ -1,0 +1,58 @@
+{% load thumbnail%}
+{% load static%}
+{% if user.photo %}
+    <a href="{{ user.photo.url }}">
+    <img src="{% thumbnail user.photo 200x100 quality=80 %}" style="border-radius: 50%">
+    </a>
+{% else %}
+    <img src="{% static 'images/avatar.jpg' %}" style="width: 200px">
+{% endif %}
+<br><br>
+
+{% if user == request.user %}
+<button disabled>
+        Follow
+</button>
+{% else %}
+<button class="follow_button">
+    {% if user in request.user.following.all %}
+        Unfollow
+    {% else %}
+        Follow
+    {% endif %}
+</button>
+{% endif %}
+
+<p><b>Username</b>: {{ user.username }}</p>
+<p><b>Bio</b>: {{ user.bio|default:'' }}</p>
+<p><b>Job</b>: {{ user.job|default:'' }}</p>
+<p><b>Birth Date</b>: {{ user.birth_date|date:'m-d-Y'|default:'' }}</p>
+
+<span class="posts-count">{{ user.posts.count }} Posts |</span>
+<span class="following-count">{{ user.following.count }} <a href="{% url 'social:user-following' user.username %}?redirect_to=following">Following</a> |</span>
+<span class="followers-count">{{ user.followers.count }} <a href="{% url 'social:user-followers' user.username %}?redirect_to=followers">Followers</a> {{ user.followers.count|pluralize }}</span>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function(){
+        $('.follow_button').click(function (){
+            var button = $(this);
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'social:user-follow' %}',
+                data: {'user_id': '{{ user.id }}', 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+                success: function(data){
+                    if (data.follow){
+                        button.text('Unfollow');
+                    } else {
+                        button.text('Follow');
+                    }
+                    $('.posts-count').text(data.posts_count + ' Posts  ')
+                    $('.following-count').text('| ' + data.following_count + '     Following')
+                    $('.followers-count').text('| ' + data.followers_count + '     Followers')
+
+                },
+            });
+        });
+    });
+</script>

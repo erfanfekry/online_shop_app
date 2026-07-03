@@ -1,0 +1,15 @@
+{% load my_tags %}
+<h4>
+    محصولات موجود در سبد خرید شما:
+</h4>
+<ul>
+    {% for item in cart %}
+        <li>{{ item.product.name }}  {{ item.quantity }}عدد --> {{ item.total|intcomma }}</li>
+    {% endfor %}
+</ul>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="تایید و پرداخت">
+</form>

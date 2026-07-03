@@ -1,0 +1,14 @@
+<h3>لطفا کد تایید دریافت شده را وارد کنید:</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="ارسال">
+</form>
+
+{% if messages %}
+    <ul>
+        {% for msg in messages %}
+            <li>{{ msg }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}

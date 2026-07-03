@@ -1,0 +1,24 @@
+{% load thumbnail%}
+{% load static%}
+
+{% if redirect_to == 'following' %}
+    <h3>Following</h3>
+{% elif redirect_to == 'followers' %}
+    <h3>Followers</h3>
+{% endif %}
+
+{% for user in users %}
+    {% if user.photo %}
+        <a href="{{ user.get_absolute_url }}">
+        <img src="{% thumbnail user.photo 200x100 quality=80 %}" style="border-radius: 50%">
+        </a>
+    {% else %}
+        <img src="{% static 'images/avatar.jpg' %}" style="width: 200px">
+    {% endif %}
+    <a href="{{ user.get_absolute_url }}">
+    {{ user.username }}
+
+    </a><br>
+{% empty %}
+    <p>There are no users.</p>
+{% endfor %}

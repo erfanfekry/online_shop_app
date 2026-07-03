@@ -1,0 +1,16 @@
+{% load my_tags %}
+{% for product in products %}
+    <div class="product">
+             <h3>
+                <a href="{{ product.get_absolute_url }}">
+                    <p>{{ product.name }}</p>
+                    <img class="pic" src="{{ product.images.first.image_file.url }}">
+                </a>
+            </h3>
+        <div class="price">
+            <span class="original-price"><span> تومان</span>{{ product.price|intcomma }}</span>
+            <br>
+            <span class="discounted-price"><span> تومان </span>{{ product.new_price|intcomma }}</span>
+        </div>
+    </div>
+{% endfor %}

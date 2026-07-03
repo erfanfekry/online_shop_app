@@ -1,0 +1,17 @@
+{% if user.is_authenticated %}
+    <form method="post">
+        {% csrf_token %}
+        <h4>You are already logged in, Do you want to log out?</h4>
+        <input type="submit" name="action_button" value="No">
+        <input type="submit" name="action_button" value="Yes">
+    </form>
+{% else %}
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Login">
+    </form>
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+{% endif %}
