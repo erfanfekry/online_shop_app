@@ -1,5 +1,4 @@
 from django.db import models
-
 from account.models import ShopUser
 from shop.models import Product
 

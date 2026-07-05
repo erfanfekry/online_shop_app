@@ -1,9 +1,10 @@
 from django.http import JsonResponse, HttpResponse
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_POST
-
 from .cart import Cart
 from shop.models import *
+
 
 @require_POST
 def add_to_cart(request, product_id):
@@ -35,7 +36,7 @@ def cart_detail(request):
     cart = Cart(request)
     print('cart: ', cart.cart)
     return render(request, 'cart/cart_detail.html', {'mycart':cart})
-#
+
 def update_quantity(request):
     action = request.POST.get('action')
     item_id = request.POST.get('item-id')
@@ -61,7 +62,6 @@ def update_quantity(request):
         return JsonResponse({'success': False, 'Error': 'item not found'})
     return None
 
-
 def remove_from_cart(request):
     item_id = str(request.POST.get('item-id'))
     try:
@@ -82,21 +82,3 @@ def remove_from_cart(request):
             'Error': 'Cannot remove item from cart.'}
     print(response_data)
     return JsonResponse(response_data)
-
-
-
-    # def clear_cart(request):
-#     cart =  request.session.get('cart')
-#     if cart:
-#         cart.clear()
-#     cart = Cart(request)
-#     item_count = len(cart)
-#     total_price = cart.get_total_price()
-#
-#     response_data = {
-#         'item_count': item_count,
-#         'total_price': total_price,
-#     }
-#
-#     return JsonResponse(response_data)
-

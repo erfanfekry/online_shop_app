@@ -6,32 +6,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from .permissions import *
-
 from .serializers import *
 
-
-# class ProductListAPIView(generics.ListAPIView):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
-#
-#
-# class DetailListAPIView(generics.RetrieveAPIView):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
-
-# class UserAPIView(APIView):
-#     authentication_classes = [BasicAuthentication]
-#     # permission_classes = [IsAuthenticated]
-#     # permission_classes = [AllowAny]
-#     def get(self, request, *args, **kwargs):
-#         users = ShopUser.objects.all()
-#         serializer = UserSerializer(users, many=True)
-#         return Response(serializer.data)
-#
-# class UserRegisterAPIView(generics.CreateAPIView):
-#     permission_classes = [AllowAny]
-#     queryset = ShopUser.objects.all()
-#     serializer_class = UserRegisterSerializer
 
 class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
