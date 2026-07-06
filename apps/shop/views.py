@@ -6,17 +6,17 @@ from apps.shop.models import *
 from .sms_verification.sms_verification import SendSms
 
 
-def post_paginator(request, posts):
-    paginator = Paginator(posts, 2)
+def product_paginator(request, products):
+    paginator = Paginator(products, 2)
     current_page = request.GET.get('page', 1)
 
     try:
-        posts = paginator.page(current_page)
+        products = paginator.page(current_page)
     except PageNotAnInteger:
-        posts = paginator.page(1)
+        products = paginator.page(1)
     except EmptyPage:
-        posts = []
-    return posts, paginator
+        products = []
+    return products, paginator
 
 
 def product_list(request, category_slug=None, sort_type=None):
@@ -86,7 +86,7 @@ def search_view(request, pagination=True):
         posts = (results1 | results2).select_related('author').distinct()
 
         if pagination:
-            posts, paginator = post_paginator(request, posts)
+            posts, paginator = product_paginator(request, posts)
         context = {
             'query': query,
             'posts': posts,

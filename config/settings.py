@@ -39,11 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'shop.apps.ShopConfig',
-    'cart.apps.CartConfig',
-    'order.apps.OrderConfig',
-    'account.apps.AccountConfig',
-    'api.apps.ApiConfig',
+    'apps.shop.apps.ShopConfig',
+    'apps.cart.apps.CartConfig',
+    'apps.order.apps.OrderConfig',
+    'apps.account.apps.AccountConfig',
+    'apps.api.apps.ApiConfig',
     'rest_framework',
     'django_extensions',
 ]
@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'OnlineShop.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -71,14 +71,14 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cart.context_processors.cart'
+                'apps.cart.context_processors.cart'
 
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'OnlineShop.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
