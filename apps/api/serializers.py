@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
-from account.models import ShopUser
-from shop.models import *
-from order.models import *
+from apps.account.models import ShopUser
+from apps.shop.models import *
+from apps.order.models import *
 
 class ProductFeaturesSerializer(serializers.ModelSerializer):
     class Meta:

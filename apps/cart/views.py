@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_POST
 from .cart import Cart
-from shop.models import *
+from apps.shop.models import *
 
 
 @require_POST

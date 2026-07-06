@@ -1,4 +1,4 @@
-from shop.models import Product
+from apps.shop.models import Product
 from copy import deepcopy
 class Cart:
     def __init__(self,  request):

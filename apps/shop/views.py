@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
-from shop.models import *
+from apps.shop.models import *
 from .sms_verification.sms_verification import SendSms
 
 

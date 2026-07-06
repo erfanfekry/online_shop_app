@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from shop.sms_verification.sms_verification import *
+from apps.shop.sms_verification.sms_verification import *
 from .forms import *
 
 

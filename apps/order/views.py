@@ -4,7 +4,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
-from cart.cart import Cart
+from apps.cart.cart import Cart
 from .forms import *
 
 
