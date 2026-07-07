@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'apps.api.apps.ApiConfig',
     'rest_framework',
     'django_extensions',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
@@ -171,3 +172,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 5,
 
 }
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER', 'amqp://guest:guest@rabbitmq:5672//')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_BACKEND', 'redis://redis:6379/0')
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_TASK_ALWAYS_EAGER = False

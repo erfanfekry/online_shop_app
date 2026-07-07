@@ -1,4 +1,6 @@
 from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,6 +15,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['name', 'price']
 
     @action(methods=['GET'], detail=False, url_path='get_discounted_products', url_name='get_discounted_products')
     def discounted_products(self, request):
@@ -27,14 +31,14 @@ class ProductViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 class UserViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     queryset = ShopUser.objects.all()
     serializer_class = UserSerializer
 
 class OrderListAPIView(generics.ListAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [IsAdminKhorasani]
+    permission_classes = [IsAuthenticated, IsAdminKhorasani]
 
 class OrderRetrieveAPIView(generics.RetrieveAPIView):
     queryset = Order.objects.all()

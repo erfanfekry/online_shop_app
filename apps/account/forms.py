@@ -1,11 +1,11 @@
 from django import forms
-from django.contrib.auth.admin import UserChangeForm, UserCreationForm
+from django.contrib.auth.admin import UserChangeForm, AdminUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 
 from .models import *
 
 
-class ShopUserCreationForm(UserCreationForm):
+class ShopUserCreationForm(AdminUserCreationForm):
     class Meta:
         model = ShopUser
         fields = ['phone', 'first_name', 'last_name', 'address', 'is_active', 'is_staff', 'is_superuser', 'date_joined']

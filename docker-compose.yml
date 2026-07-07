@@ -1,0 +1,76 @@
+version: '3.8'
+services:
+
+  flower:
+    image: mher/flower
+    container_name: flower
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+    depends_on:
+      - rabbitmq
+      - celery
+    networks:
+      - mynetwork
+
+  redis:
+    container_name: redis
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    networks:
+      - mynetwork
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - mynetwork
+
+  django:
+    image: django_image
+    container_name: 'django'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app/
+    ports:
+      - '8000:8000'
+      - '8001:8001'
+    environment:
+      - DEBUG=1
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - SECRET_KEY=gsdgsdfgsdg55465sdfgsdz6g54
+    networks:
+      - mynetwork
+    depends_on:
+      - redis
+
+
+  celery:
+    image: celery_image
+    container_name: 'celery'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A config worker -Q tasks -l info -E -B
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=1
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - SECRET_KEY=gsdgsdfgsdg55465sdfgsdz6g54
+    networks:
+      - mynetwork
+    depends_on:
+      - redis
+
+networks:
+  mynetwork:
+    driver: bridge
